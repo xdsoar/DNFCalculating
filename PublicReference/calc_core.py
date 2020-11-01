@@ -108,49 +108,7 @@ def calc_speed_and_set_mode(data):
     else:
         from .装备_buff import 套装映射, 部位列表, 装备列表
 
-    套装组合 = []
-    套装适用 = []
-
-    for a in data.有效防具套装:
-        for b in data.有效首饰套装:
-            for c in data.有效特殊套装:
-                # 533
-                套装组合.append([a, a, a, a, a, b, b, b, c, c, c]);
-                套装适用.append([a + '[2]', a + '[3]', a + '[5]', b + '[2]', b + '[3]', c + '[2]', c + '[3]'])
-
-    for a in data.有效防具套装:
-        for d in data.有效上链左套装:
-            for e in data.有效镯下右套装:
-                for f in data.有效环鞋指套装:
-                    # 3332
-                    套装组合.append([d, a, e, a, f, e, d, f, f, d, e]);
-                    套装适用.append([a + '[2]', d + '[2]', d + '[3]', e + '[2]', e + '[3]', f + '[2]', f + '[3]'])
-                    套装组合.append([a, a, e, a, f, e, d, f, f, d, e]);
-                    套装适用.append([a + '[2]', d + '[2]', a + '[3]', e + '[2]', e + '[3]', f + '[2]', f + '[3]'])
-                    套装组合.append([d, a, a, a, f, e, d, f, f, d, e]);
-                    套装适用.append([a + '[2]', d + '[2]', d + '[3]', e + '[2]', a + '[3]', f + '[2]', f + '[3]'])
-                    套装组合.append([d, a, e, a, a, e, d, f, f, d, e]);
-                    套装适用.append([a + '[2]', d + '[2]', d + '[3]', e + '[2]', e + '[3]', f + '[2]', a + '[3]'])
-
-    if data.mode_index == 1:
-        for a in data.有效防具套装:
-            for b in data.有效首饰套装:
-                for c in data.有效特殊套装:
-                    for d in data.有效防具套装:
-                        if d != a:
-                            # 2333 占套装模式90%计算量
-                            套装组合.append([a, a, a, d, d, b, b, b, c, c, c])
-                            套装组合.append([a, a, d, a, d, b, b, b, c, c, c])
-                            套装组合.append([a, d, a, a, d, b, b, b, c, c, c])
-                            套装组合.append([d, a, a, a, d, b, b, b, c, c, c])
-                            套装组合.append([a, a, d, d, a, b, b, b, c, c, c])
-                            套装组合.append([a, d, a, d, a, b, b, b, c, c, c])
-                            套装组合.append([d, a, a, d, a, b, b, b, c, c, c])
-                            套装组合.append([a, d, d, a, a, b, b, b, c, c, c])
-                            套装组合.append([d, a, d, a, a, b, b, b, c, c, c])
-                            套装组合.append([d, d, a, a, a, b, b, b, c, c, c])
-                            for x in range(0, 10):
-                                套装适用.append([a + '[2]', a + '[3]', d + '[2]', b + '[2]', b + '[3]', c + '[2]', c + '[3]'])
+    套装组合, 套装适用 = calc_valid_set(data)
 
     # 极速模式与套装模式
     count = -1
@@ -190,6 +148,141 @@ def calc_speed_and_set_mode(data):
                     #     data.mode_index, data.start_index, data.end_index, current_index
                     #))
     pass
+
+
+# TODO
+def 计算智慧产物套装组合(套装组合, 套装适用, 有效智慧产物, 智慧产物限制数量):
+    '''
+    @param 套装组合: List[List[str]] 配装列表, 第二层列表顺序为'上衣', '头肩', '下装', '腰带', '鞋', '手镯', '项链', '戒指',
+                    '耳环', '辅助装备', '魔法石'
+    @param 套装适用: List[List[str]] 套装词条, 不分顺序
+    @param 有效智慧产物: List[List[str]] 勾选的智慧产物列表, 第二层列表顺序与套装组合顺序相同
+    @param 智慧产物限制数量
+    @return: 包含智慧产物的套装组合: List[List[str]], 包含智慧产物的套装效果List[List[Str]]
+    '''
+    智慧产物可用组合 = []
+    套装组合_new, 套装适用_new = [], []
+    for 使用智慧产物数量 in range(1, 智慧产物限制数量):
+        for 各部位有效产物装备 in 有效智慧产物:
+            单智慧产物组合 = []
+            for 单件产物装备 in 各部位有效产物装备:
+                None
+
+    return 套装组合_new, 套装适用_new
+
+
+@DeprecationWarning
+def 获取指定数量的智慧产物组合(有效智慧产物, 挑选数量, 已挑选装备):
+    '''
+    @param 有效智慧产物:  List[List[str]] 勾选的智慧产物列表, 第二层列表顺序为默认的装备组合顺序
+    @param 挑选数量: 从列表中挑选的
+    @param 已挑选装备: List[str]
+    @return: 在所有有效智慧产物装备中, 挑选指定数量的装备, 其中包含在"已挑选装备"部位的装备不会被挑选
+    '''
+    if 挑选数量 == 0:
+        return []
+    全装备组合 = []
+    该部位已挑选 = False
+    for 各部位有效装备 in 有效智慧产物:
+        for 已挑选装备迭代器 in 已挑选装备:
+            if 已挑选装备迭代器 in 各部位有效装备:
+                该部位已挑选 = True
+                break
+        if 该部位已挑选:
+            该部位已挑选 = False
+            continue
+        for 装备 in 各部位有效装备:
+            新装备组合 = []
+            新装备组合.extend(已挑选装备)
+            新装备组合.append(装备)
+            if 挑选数量 > 1:
+                剩余装备组合 = 获取指定数量的智慧产物组合(有效智慧产物, 挑选数量-1, 新装备组合)
+                for 单一组合 in 剩余装备组合:
+                    完整装备组合 = []
+                    完整装备组合.extend(单一组合)
+                    全装备组合.append(完整装备组合)
+            else:
+                全装备组合.append(新装备组合)
+    return 全装备组合
+
+
+def 获取指定数量的智慧产物组合_V2(有效智慧产物, 挑选数量, 已挑选装备, 起始位置):
+    '''
+    @param 有效智慧产物:  List[List[str]] 勾选的智慧产物列表, 第二层列表顺序为默认的装备组合顺序
+    @param 挑选数量: 从列表中挑选的
+    @param 已挑选装备: List[str]
+    @return: 在所有有效智慧产物装备中, 挑选指定数量的装备, 其中包含在"已挑选装备"部位的装备不会被挑选
+    '''
+    if 挑选数量 == 0:
+        return []
+    if 起始位置+挑选数量 > len(有效智慧产物):
+        return []
+    全装备组合 = []
+    该部位已挑选 = False
+    for i in range(起始位置, len(有效智慧产物)):
+        挑选部位 = 有效智慧产物[i]
+        for 装备 in 挑选部位:
+            新装备组合 = []
+            新装备组合.extend(已挑选装备)
+            新装备组合.append(装备)
+            if 挑选数量 > 1:
+                剩余装备组合 = 获取指定数量的智慧产物组合_V2(有效智慧产物, 挑选数量-1, 新装备组合, i+1)
+                for 单一组合 in 剩余装备组合:
+                    完整装备组合 = []
+                    完整装备组合.extend(单一组合)
+                    全装备组合.append(完整装备组合)
+            else:
+                全装备组合.append(新装备组合)
+    return 全装备组合
+
+
+
+
+
+def calc_valid_set(data):
+    套装组合 = []
+    套装适用 = []
+    for a in data.有效防具套装:
+        for b in data.有效首饰套装:
+            for c in data.有效特殊套装:
+                # 533
+                套装组合.append([a, a, a, a, a, b, b, b, c, c, c]);
+                套装适用.append([a + '[2]', a + '[3]', a + '[5]', b + '[2]', b + '[3]', c + '[2]', c + '[3]'])
+    for a in data.有效防具套装:
+        for d in data.有效上链左套装:
+            for e in data.有效镯下右套装:
+                for f in data.有效环鞋指套装:
+                    # 3332
+                    套装组合.append([d, a, e, a, f, e, d, f, f, d, e]);
+                    套装适用.append([a + '[2]', d + '[2]', d + '[3]', e + '[2]', e + '[3]', f + '[2]', f + '[3]'])
+                    套装组合.append([a, a, e, a, f, e, d, f, f, d, e]);
+                    套装适用.append([a + '[2]', d + '[2]', a + '[3]', e + '[2]', e + '[3]', f + '[2]', f + '[3]'])
+                    套装组合.append([d, a, a, a, f, e, d, f, f, d, e]);
+                    套装适用.append([a + '[2]', d + '[2]', d + '[3]', e + '[2]', a + '[3]', f + '[2]', f + '[3]'])
+                    套装组合.append([d, a, e, a, a, e, d, f, f, d, e]);
+                    套装适用.append([a + '[2]', d + '[2]', d + '[3]', e + '[2]', e + '[3]', f + '[2]', a + '[3]'])
+    if data.mode_index == 1:
+        for a in data.有效防具套装:
+            for b in data.有效首饰套装:
+                for c in data.有效特殊套装:
+                    for d in data.有效防具套装:
+                        if d != a:
+                            # 2333 占套装模式90%计算量
+                            套装组合.append([a, a, a, d, d, b, b, b, c, c, c])
+                            套装组合.append([a, a, d, a, d, b, b, b, c, c, c])
+                            套装组合.append([a, d, a, a, d, b, b, b, c, c, c])
+                            套装组合.append([d, a, a, a, d, b, b, b, c, c, c])
+                            套装组合.append([a, a, d, d, a, b, b, b, c, c, c])
+                            套装组合.append([a, d, a, d, a, b, b, b, c, c, c])
+                            套装组合.append([d, a, a, d, a, b, b, b, c, c, c])
+                            套装组合.append([a, d, d, a, a, b, b, b, c, c, c])
+                            套装组合.append([d, a, d, a, a, b, b, b, c, c, c])
+                            套装组合.append([d, d, a, a, a, b, b, b, c, c, c])
+                            for x in range(0, 10):
+                                套装适用.append(
+                                    [a + '[2]', a + '[3]', d + '[2]', b + '[2]', b + '[3]', c + '[2]', c + '[3]'])
+    return 套装组合, 套装适用
+
 
 #11层循环顺序
 顺序 = [5, 8, 1, 3, 2, 4, 6, 9, 7, 10]
