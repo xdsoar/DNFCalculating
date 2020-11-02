@@ -1408,7 +1408,7 @@ class 角色窗口(QWidget):
         self.百变怪选项.setStyleSheet(复选框样式)
 
         self.计算模式选择 = MyQComboBox(self.main_frame1)
-        self.计算模式选择.addItems(['计算模式：极速模式', '计算模式：套装模式', '计算模式：单件模式', '计算模式：智慧套装模式'])
+        self.计算模式选择.addItems(['计算模式：极速模式', '计算模式：套装模式', '计算模式：单件模式', '计算模式：智慧模式'])
         self.计算模式选择.move(750, 613)
         self.计算模式选择.resize(235, 24)
         self.计算模式选择.setStyleSheet("QComboBox{font-size:12px;color:white;background-color:rgba(70,134,197,0.8);border:1px;border-radius:3px} QComboBox:hover{background-color:rgba(65,105,225,0.8)}")
@@ -2816,7 +2816,7 @@ class 角色窗口(QWidget):
                 self.计算模式选择.setItemText(0, '计算模式：极速模式  组合：' + self.组合数量计算(0))
                 self.计算模式选择.setItemText(1, '计算模式：套装模式  组合：' + self.组合数量计算(1))
                 self.计算模式选择.setItemText(2, '计算模式：单件模式  组合：' + self.组合数量计算(2))
-                self.计算模式选择.setItemText(2, '计算模式：智慧模式  组合：' + self.组合数量计算(3))
+                self.计算模式选择.setItemText(3, '计算模式：智慧模式  组合：' + self.组合数量计算(3))
 
     def 套装按钮点击事件(self, index):
         count1 = 0
@@ -2833,7 +2833,7 @@ class 角色窗口(QWidget):
                 self.装备图标点击事件(装备序号[i.名称], 0 if count2 > 0 else 1)
 
     def 组合数量计算(self, sign, x = 0):
-        if sign == 0 or sign == 1:
+        if sign == 0 or sign == 1 or sign == 3:
             self.有效武器列表.clear()
             for j in range(0, 6):
                 self.有效总套装列表[j].clear()
@@ -2848,6 +2848,10 @@ class 角色窗口(QWidget):
                 counter = (len(self.有效防具套装)*len(self.有效首饰套装)*len(self.有效特殊套装)+len(self.有效防具套装)*len(self.有效上链左套装)*len(self.有效镯下右套装)*len(self.有效环鞋指套装)*4)*4*len(self.有效武器列表)
             if sign == 1:
                 counter = (len(self.有效防具套装)*len(self.有效首饰套装)*len(self.有效特殊套装)+len(self.有效防具套装)*len(self.有效上链左套装)*len(self.有效镯下右套装)*len(self.有效环鞋指套装)*4+len(self.有效防具套装)*len(self.有效首饰套装)*len(self.有效特殊套装)*(len(self.有效防具套装)-1)*10)*4*len(self.有效武器列表)
+            if sign == 3:
+                counter = (len(self.有效防具套装) * len(self.有效首饰套装) * len(self.有效特殊套装) + len(self.有效防具套装) * len(
+                    self.有效上链左套装) * len(self.有效镯下右套装) * len(self.有效环鞋指套装) * 4 + len(self.有效防具套装) * len(
+                    self.有效首饰套装) * len(self.有效特殊套装) * (len(self.有效防具套装) - 1) * 10) * 4 * len(self.有效武器列表)
     
         if sign == 2:
             self.有效部位列表.clear()
@@ -4984,7 +4988,7 @@ class 角色窗口(QWidget):
 
     def 组合计算(self, index):
         套装组合=[]
-        if index <= 1:
+        if index <= 1 or index == 3:
             for a in self.有效防具套装:
                 for b in self.有效首饰套装:
                     for c in self.有效特殊套装:
@@ -4999,7 +5003,7 @@ class 角色窗口(QWidget):
                             套装组合.append([a, a, e, a, f, e, d, f, f, d, e])
                             套装组合.append([d, a, a, a, f, e, d, f, f, d, e])
                             套装组合.append([d, a, e, a, a, e, d, f, f, d, e])
-        if index == 1:
+        if index in (1, 3):
             for a in self.有效防具套装:
                 for b in self.有效首饰套装:
                     for c in self.有效特殊套装:
