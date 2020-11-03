@@ -1,3 +1,4 @@
+from PublicReference.calc_core import calc_valid_set
 from PublicReference.宠物 import *
 from PublicReference.称号 import *
 from PublicReference.装备 import *
@@ -4987,45 +4988,14 @@ class 角色窗口(QWidget):
                                     break
 
     def 组合计算(self, index):
-        套装组合=[]
-        if index <= 1 or index == 3:
-            for a in self.有效防具套装:
-                for b in self.有效首饰套装:
-                    for c in self.有效特殊套装:
-                        # 533
-                        套装组合.append([a, a, a, a, a, b, b, b, c, c, c])
-            for a in self.有效防具套装:
-                for d in self.有效上链左套装:
-                    for e in self.有效镯下右套装:
-                        for f in self.有效环鞋指套装:
-                            # 3332
-                            套装组合.append([d, a, e, a, f, e, d, f, f, d, e])
-                            套装组合.append([a, a, e, a, f, e, d, f, f, d, e])
-                            套装组合.append([d, a, a, a, f, e, d, f, f, d, e])
-                            套装组合.append([d, a, e, a, a, e, d, f, f, d, e])
-        if index in (1, 3):
-            for a in self.有效防具套装:
-                for b in self.有效首饰套装:
-                    for c in self.有效特殊套装:
-                        for d in self.有效防具套装:
-                            if d != a:
-                                # 2333
-                                套装组合.append([a, a, a, d, d, b, b, b, c, c, c])
-                                套装组合.append([a, a, d, a, d, b, b, b, c, c, c])
-                                套装组合.append([a, d, a, a, d, b, b, b, c, c, c])
-                                套装组合.append([d, a, a, a, d, b, b, b, c, c, c])
-                                套装组合.append([a, a, d, d, a, b, b, b, c, c, c])
-                                套装组合.append([a, d, a, d, a, b, b, b, c, c, c])
-                                套装组合.append([d, a, a, d, a, b, b, b, c, c, c])
-                                套装组合.append([a, d, d, a, a, b, b, b, c, c, c])
-                                套装组合.append([d, a, d, a, a, b, b, b, c, c, c])
-                                套装组合.append([d, d, a, a, a, b, b, b, c, c, c])
+        套装组合, _ = calc_valid_set(self.有效防具套装, self.有效首饰套装, self.有效特殊套装, self.有效上链左套装,
+                                self.有效镯下右套装, self.有效环鞋指套装, self.有效部位列表, self.智慧产物限制.currentIndex()+1, 装备列表, index)
         count = 0
         if self.百变怪选项.isChecked():
             初始sign2 = '空'
         else:
             初始sign2 = '无'
-        if index != 2:
+        if index in (0, 1):
             for temp in 套装组合:
                 for k in [-1, 0, 5, 8]:
                     temp1 = []
@@ -5043,7 +5013,7 @@ class 角色窗口(QWidget):
                                 sign += 1
                     if sign == 11:
                         count += len(self.有效武器列表)  
-        if index == 2:
+        if index == 2 or index == 3:
             count = 1     
             for i in self.有效部位列表:
                 count *= len(i)                       
