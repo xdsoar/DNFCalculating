@@ -4995,6 +4995,7 @@ class 角色窗口(QWidget):
             初始sign2 = '空'
         else:
             初始sign2 = '无'
+        # TODO add index = 3
         if index in (0, 1):
             for temp in 套装组合:
                 for k in [-1, 0, 5, 8]:
@@ -5013,7 +5014,7 @@ class 角色窗口(QWidget):
                                 sign += 1
                     if sign == 11:
                         count += len(self.有效武器列表)  
-        if index == 2 or index == 3:
+        if index == 2:
             count = 1     
             for i in self.有效部位列表:
                 count *= len(i)                       
